@@ -618,3 +618,40 @@ function depurify(code::SimpleCode, index::Int)
 
     return SimpleCode(name, new_stabilizers, new_logicals)
 end
+
+"""
+    hadamard(code::SimpleCode, index::Int) -> SimpleCode
+
+Given a simple code with an index to apply a Hadamard gate, return a new simple code rotated a Hadamard gate.
+"""
+function hadamard(code::SimpleCode, index::Int)
+    g = deepcopy(code.stabilizers)
+    l = deepcopy(code.logicals)
+    e = deepcopy(code.pure_errors)
+    n = num_qubits(code)
+    # precondition
+    (index in 1:n) || error("logical qubit index out of bounds!")
+    for element in g
+        element[index] = _hadamard(element[index])
+    end
+    for element in l
+        element[index] = _hadamard(element[index])
+    end
+    for element in e
+        element[index] = _hadamard(element[index])
+    end
+    name = "$(index)th-Hadamard $(code.name)"
+    return SimpleCode(name, g, l, e)
+end
+
+function _hadamard(p::Int)
+    # precondition
+    (p in 0:3) || error("logical qubit index out of bounds!")
+    if p == 1
+        return 3
+    elseif p == 3
+        return 1
+    else
+        return p
+    end
+end
