@@ -190,7 +190,7 @@ julia> num_qubits(fused_code), length(fused_code.logicals) ÷ 2
 """
 function fusion(code::SimpleCode, qubit_pair::AbstractVector{Int})
     stabilizers = deepcopy(code.stabilizers)
-    pure_errors = deepcopy(code.pure_errors)
+    # pure_errors = deepcopy(code.pure_errors)
     logicals = deepcopy(code.logicals)
 
     annoying_ops = _annoying_stabilizers(stabilizers, qubit_pair)
@@ -208,15 +208,15 @@ function fusion(code::SimpleCode, qubit_pair::AbstractVector{Int})
         sort!(useful_inds)
         useful_ops = [stabilizers[ind] for ind in useful_inds]
         deleteat!(stabilizers, sort!(useful_inds))
-        deleteat!(pure_errors, sort!(useful_inds))
+        # deleteat!(pure_errors, sort!(useful_inds))
 
         stabilizers = _make_ready(stabilizers, useful_ops, qubit_pair)
         logicals = _make_ready(logicals, useful_ops, qubit_pair)
-        pure_errors = _make_ready(pure_errors, useful_ops, qubit_pair)
+        # pure_errors = _make_ready(pure_errors, useful_ops, qubit_pair)
     end
 
     _remove_qubits!(stabilizers, qubit_pair)
-    _remove_qubits!(pure_errors, qubit_pair)
+    # _remove_qubits!(pure_errors, qubit_pair)
     if length(logicals) != 0
         _remove_qubits!(logicals, qubit_pair)
     end
@@ -227,14 +227,15 @@ function fusion(code::SimpleCode, qubit_pair::AbstractVector{Int})
         for α in 1:length(stabilizers)
             if pauli_are_independent(vcat(new_stabilizers, [stabilizers[α]]))
                 push!(new_stabilizers, stabilizers[α])
-                push!(new_pure_errors, pure_errors[α])
+                # push!(new_pure_errors, pure_errors[α])
             end
         end
-        pure_errors = new_pure_errors
+        # pure_errors = new_pure_errors
         stabilizers = new_stabilizers
     end
 
-    return SimpleCode(" ", stabilizers, logicals, pure_errors)
+    # return SimpleCode(" ", stabilizers, logicals, pure_errors)
+    return SimpleCode(" ", stabilizers, logicals)
 end
 function fusion(code::SimpleCode, qubit_pairs)
     output_code = deepcopy(code)
