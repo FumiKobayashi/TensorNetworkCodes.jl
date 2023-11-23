@@ -613,8 +613,8 @@ function depurify(code::SimpleCode, index::Int)
     name = "$(index)th-Depurified $(code.name)"
     physical_qubits = [i for i in 1:n if i != index]
     left_stabilizer_index = [i for i in 1:length(g) if i != x_indices[1] && i != z_indices[1]]
-    new_stabilizers = [element[physical_qubits] for element in g[left_stabilizer_index]]
-    new_logicals = [logical_x[physical_qubits], logical_z[physical_qubits]]
+    new_stabilizers::Vector{Vector{Int64}} = [element[physical_qubits] for element in g[left_stabilizer_index]]
+    new_logicals::Vector{Vector{Int64}} = [logical_x[physical_qubits], logical_z[physical_qubits]]
 
     return SimpleCode(name, new_stabilizers, new_logicals)
 end
