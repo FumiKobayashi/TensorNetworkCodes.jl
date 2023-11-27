@@ -6,3 +6,5 @@
 /docs/Manifest.toml
 # jupyter
 .ipynb_checkpoints/
+nbs/*
+.DS_Store
